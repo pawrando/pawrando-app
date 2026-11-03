@@ -78,7 +78,9 @@ alert("GPX reçu : " + (fichier ? fichier.name : "aucun fichier"));
 
 async function voirTendon() {
   try {
-    const reponse = await fetch("Cirkwi-Cascades_du_Tendon.gpx");
+    
+const reponse = await fetch("visorando-les-cascades-de-tendon.gpx");
+
     if (!reponse.ok) throw new Error("Fichier GPX introuvable");
     const texte = await reponse.text();
     const balade = window.PawRandoBalades.lireGPX(texte);
