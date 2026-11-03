@@ -138,11 +138,16 @@ const reponse = await fetch("visorando-les-cascades-de-tendon.gpx");
     if (!reponse.ok) throw new Error("Fichier GPX introuvable");
     const texte = await reponse.text();
     const balade = window.PawRandoBalades.lireGPX(texte);
-    const trace = L.polyline(
-      balade.coords.map(p => [p.lat, p.lon]),
-      { color: "#16866a", weight: 5 }
-    ).addTo(map);
-    map.fitBounds(trace.getBounds());
+   
+if (afficherCarte) {
+  const trace = L.polyline(
+    balade.coords.map(p => [p.lat, p.lon]),
+    { color: "#16866a", weight: 5 }
+  ).addTo(map);
+
+  map.fitBounds(trace.getBounds());
+}
+
     
 const documentGPX = new DOMParser().parseFromString(texte, "application/xml");
 const points = [...documentGPX.getElementsByTagName("trkpt")];
