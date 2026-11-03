@@ -137,6 +137,39 @@ const reponse = await fetch("visorando-les-cascades-de-tendon.gpx");
       { color: "#16866a", weight: 5 }
     ).addTo(map);
     map.fitBounds(trace.getBounds());
+    
+const documentGPX = new DOMParser().parseFromString(texte, "application/xml");
+const pointsGPX = [...documentGPX.getElementsByTagName("trkpt")];
+const altitudes = pointsGPX.map(point => {
+  const elevation = point.getElementsByTagName("ele")[0];
+  return elevation ? Number(elevation.textContent) : NaN;
+}).filter(Number.isFinite);
+
+const canvas = document.getElementById("profilTendon");
+
+if (canvas && altitudes.length > 1) {
+  const largeur = canvas.width = 600;
+  const hauteur = canvas.height = 220;
+  const ctx = canvas.getContext("2d");
+  const mini = Math.min(...altitudes);
+  const maxi = Math.max(...altitudes);
+  const amplitude = Math.max(maxi - mini, 1);
+
+  ctx.clearRect(0, 0, largeur, hauteur);
+  ctx.beginPath();
+  ctx.strokeStyle = "#16866a";
+  ctx.lineWidth = 3;
+
+  altitudes.forEach((altitude, i) => {
+    const x = 20 + i / (altitudes.length - 1) * 560;
+    const y = 190 - (altitude - mini) / amplitude * 160;
+    if (i === 0) ctx.moveTo(x, y);
+    else ctx.lineTo(x, y);
+  });
+
+  ctx.stroke();
+}
+
     alert("Cascades de Tendon : " + balade.distanceKm + " km");
   } catch (erreur) {
     alert("Erreur : " + erreur.message);
