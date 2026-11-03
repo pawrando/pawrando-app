@@ -128,7 +128,9 @@ alert("GPX reçu : " + (fichier ? fichier.name : "aucun fichier"));
 
 }
 
-async function voirTendon() {
+
+async function voirTendon(afficherCarte = true) {
+
   try {
     
 const reponse = await fetch("visorando-les-cascades-de-tendon.gpx");
