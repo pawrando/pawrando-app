@@ -143,36 +143,128 @@ const reponse = await fetch("visorando-les-cascades-de-tendon.gpx");
     map.fitBounds(trace.getBounds());
     
 const documentGPX = new DOMParser().parseFromString(texte, "application/xml");
-const pointsGPX = [...documentGPX.getElementsByTagName("trkpt")];
-const altitudes = pointsGPX.map(point => {
-  const elevation = point.getElementsByTagName("ele")[0];
-  return elevation ? Number(elevation.textContent) : NaN;
-}).filter(Number.isFinite);
+const points = [...documentGPX.getElementsByTagName("trkpt")];
+const donnees = points.map(p => {
+  const ele = p.getElementsByTagName("ele")[0];
+  const lat = Number(p.getAttribute("lat"));
+  const lon = Number(p.getAttribute("lon"));
+  return { lat, lon, alt: ele ? Number(ele.textContent) : NaN };
+}).filter(p => Number.isFinite(p.alt) && Number.isFinite(p.lat) && Number.isFinite(p.lon));
 
 const canvas = document.getElementById("profilTendon");
 
-if (canvas && altitudes.length > 1) {
-  const largeur = canvas.width = 600;
-  const hauteur = canvas.height = 220;
+if (canvas && donnees.length > 1) {
   const ctx = canvas.getContext("2d");
-  const mini = Math.min(...altitudes);
-  const maxi = Math.max(...altitudes);
+  const W = canvas.width = 600;
+  const H = canvas.height = 260;
+  const gauche = 58, droite = 18, haut = 20, bas = 45;
+  const largeur = W - gauche - droite;
+  const hauteur = H - haut - bas;
+
+  const rad = Math.PI / 180;
+  const distance = [0];
+
+  for (let i = 1; i < donnees.length; i++) {
+    const a = donnees[i - 1], b = donnees[i];
+    const dLat = (b.lat - a.lat) * rad;
+    const dLon = (b.lon - a.lon) * rad;
+    const h = Math.sin(dLat / 2) ** 2 +
+      Math.cos(a.lat * rad) * Math.cos(b.lat * rad) *
+      Math.sin(dLon / 2) ** 2;
+    const km = 12742 * Math.asin(Math.min(1, Math.sqrt(h)));
+    distance.push(distance[i - 1] + km);
+  }
+
+  const total = distance[distance.length - 1];
+  const mini = Math.min(...donnees.map(p => p.alt));
+  const maxi = Math.max(...donnees.map(p => p.alt));
   const amplitude = Math.max(maxi - mini, 1);
 
-  ctx.clearRect(0, 0, largeur, hauteur);
-  ctx.beginPath();
-  ctx.strokeStyle = "#16866a";
-  ctx.lineWidth = 3;
+  const X = i => gauche + distance[i] / Math.max(total, 0.001) * largeur;
+  const Y = alt => haut + (maxi - alt) / amplitude * hauteur;
 
-  altitudes.forEach((altitude, i) => {
-    const x = 20 + i / (altitudes.length - 1) * 560;
-    const y = 190 - (altitude - mini) / amplitude * 160;
-    if (i === 0) ctx.moveTo(x, y);
-    else ctx.lineTo(x, y);
-  });
+  function dessiner(index = -1) {
+    ctx.clearRect(0, 0, W, H);
+    ctx.font = "13px sans-serif";
+    ctx.fillStyle = "#64746e";
+    ctx.strokeStyle = "#dce8df";
+    ctx.lineWidth = 1;
 
-  ctx.stroke();
+    for (let j = 0; j <= 4; j++) {
+      const alt = mini + amplitude * j / 4;
+      const y = Y(alt);
+      ctx.beginPath();
+      ctx.moveTo(gauche, y);
+      ctx.lineTo(W - droite, y);
+      ctx.stroke();
+      ctx.fillText(Math.round(alt) + " m", 4, y + 4);
+    }
+
+    for (let j = 0; j <= 4; j++) {
+      const km = total * j / 4;
+      const x = gauche + largeur * j / 4;
+      ctx.fillText(km.toFixed(1), x - 12, H - 22);
+    }
+    ctx.fillText("Distance (km)", W / 2 - 45, H - 3);
+
+    ctx.beginPath();
+    donnees.forEach((p, i) => {
+      if (i === 0) ctx.moveTo(X(i), Y(p.alt));
+      else ctx.lineTo(X(i), Y(p.alt));
+    });
+    ctx.lineTo(X(donnees.length - 1), H - bas);
+    ctx.lineTo(X(0), H - bas);
+    ctx.closePath();
+    ctx.fillStyle = "rgba(22,134,106,0.12)";
+    ctx.fill();
+
+    ctx.beginPath();
+    donnees.forEach((p, i) => {
+      if (i === 0) ctx.moveTo(X(i), Y(p.alt));
+      else ctx.lineTo(X(i), Y(p.alt));
+    });
+    ctx.strokeStyle = "#16866a";
+    ctx.lineWidth = 3;
+    ctx.stroke();
+
+    if (index >= 0) {
+      const x = X(index), y = Y(donnees[index].alt);
+      ctx.beginPath();
+      ctx.arc(x, y, 5, 0, 2 * Math.PI);
+      ctx.fillStyle = "#16866a";
+      ctx.fill();
+      ctx.fillStyle = "#184c3d";
+      ctx.font = "bold 14px sans-serif";
+      const info = distance[index].toFixed(2) + " km · " +
+        Math.round(donnees[index].alt) + " m";
+      ctx.fillText(info, 65, 16);
+    }
+  }
+
+  dessiner();
+
+  function toucher(e) {
+    const rect = canvas.getBoundingClientRect();
+    const x = (e.clientX - rect.left) * W / rect.width;
+    let index = 0;
+    let ecart = Infinity;
+
+    distance.forEach((d, i) => {
+      const diff = Math.abs(X(i) - x);
+      if (diff < ecart) {
+        ecart = diff;
+        index = i;
+      }
+    });
+    dessiner(index);
+  }
+
+  canvas.onpointerdown = toucher;
+  canvas.onpointermove = e => {
+    if (e.buttons === 1) toucher(e);
+  };
 }
+
 
     alert("Cascades de Tendon : " + balade.distanceKm + " km");
   } catch (erreur) {
