@@ -213,5 +213,57 @@ pointTendon.bindPopup(`
   <a href="tendon.html" target="_blank" rel="noopener noreferrer">🐾 Voir la fiche complète</a>
 `);
 
+// Bouton de géolocalisation PawRando
+const boutonGPS = L.control({ position: "topleft" });
 
+boutonGPS.onAdd = function () {
+  const bouton = L.DomUtil.create("button");
+
+  bouton.innerHTML = "📍";
+  bouton.title = "Me localiser";
+  bouton.style.cssText = `
+    background:#20473F;
+    color:white;
+    border:2px solid #C76D4D;
+    border-radius:10px;
+    width:42px;
+    height:42px;
+    font-size:22px;
+    cursor:pointer;
+    margin-top:10px;
+  `;
+
+  L.DomEvent.disableClickPropagation(bouton);
+
+  bouton.onclick = function () {
+    if (!navigator.geolocation) {
+      alert("Géolocalisation non disponible.");
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      function (position) {
+        const lat = position.coords.latitude;
+        const lon = position.coords.longitude;
+
+        map.setView([lat, lon], 14);
+
+        L.circleMarker([lat, lon], {
+          radius:8,
+          color:"#C76D4D",
+          fillColor:"#20473F",
+          fillOpacity:1
+        }).addTo(map).bindPopup("📍 Vous êtes ici").openPopup();
+      },
+      function () {
+        alert("Impossible d'obtenir votre position GPS.");
+      },
+      { enableHighAccuracy:true, timeout:15000 }
+    );
+  };
+
+  return bouton;
+};
+
+boutonGPS.addTo(map);
 </script></body></html>
