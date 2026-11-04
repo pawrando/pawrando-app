@@ -164,6 +164,47 @@ main h4 {
   color: #294B3A;
   font-size: 18px;
 }
+    /* 🌿 DESIGN PREMIUM PAWRANDO */
+
+/* Cartes blanches avec dégradé sauge */
+.card {
+  background: linear-gradient(
+    145deg,
+    #FFFFFF 0%,
+    #F4F7F1 55%,
+    #E4EBDF 100%
+  );
+
+  border: 1px solid rgba(191, 120, 94, 0.25);
+  border-radius: 22px;
+  padding: 24px;
+  margin-bottom: 22px;
+
+  box-shadow:
+    0 8px 25px rgba(41, 75, 58, 0.10),
+    0 2px 6px rgba(53, 107, 104, 0.06);
+
+  transition: box-shadow 0.25s ease;
+}
+
+/* Titres vert forêt */
+.card h2,
+.card h3 {
+  color: #294B3A;
+}
+
+/* Ombre élégante au survol */
+.card:hover {
+  box-shadow:
+    0 12px 30px rgba(41, 75, 58, 0.16);
+}
+
+/* Adaptation aux téléphones */
+@media (max-width: 600px) {
+  .card {
+    padding: 16px;
+    border-radius: 18px;
+  }
 </style>
 
 </head>
