@@ -316,7 +316,30 @@ row-gap:12px;
       box-shadow:0 4px 15px #0003;
       color:#20473F;
     ">
-      <h3>🐾 Filtrer les randonnées</h3>
+     <style>
+.grille-filtres {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  width: 100%;
+}
+
+.filtre-item {
+  min-width: 0;
+}
+
+.filtre-item label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: bold;
+}
+
+.filtre-item select {
+  width: 100%;
+  box-sizing: border-box;
+}
+</style>
+<h3>🐾 Filtrer les randonnées</h3>
 <div class="grille-filtres">
 <div class="filtre-item">
       <label>🥾 Distance</label>
