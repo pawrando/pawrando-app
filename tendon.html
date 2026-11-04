@@ -126,6 +126,11 @@
   <button class="btn" onclick="enregistrerRando()">
   💾 Terminer et enregistrer
 </button>
+  <h3>🐾 Mes randonnées enregistrées</h3>
+
+<div id="mesRandonnees">
+  Aucune randonnée enregistrée.
+</div>
 </div>
 
     <p>📍 Tendon, Vosges (88)</p>
@@ -388,7 +393,45 @@ function arreterRando() {
 
   alert("🐾 Randonnée enregistrée !");
   arreterRando();
+  afficherMesRandonnees();
 }
+function afficherMesRandonnees() {
+  const zone = document.getElementById("mesRandonnees");
+  if (!zone) return;
+
+  const activites = JSON.parse(
+    localStorage.getItem("pawrando_activites") || "[]"
+  );
+
+  zone.innerHTML = "";
+
+  if (activites.length === 0) {
+    zone.textContent = "Aucune randonnée enregistrée.";
+    return;
+  }
+
+  activites.slice().reverse().forEach(activite => {
+    const minutes = Math.floor(activite.duree / 60);
+    const secondes = activite.duree % 60;
+
+    const carte = document.createElement("div");
+    carte.style.cssText =
+      "padding:15px;margin:10px 0;border-radius:12px;background:#f5eee8;";
+
+    const nom = document.createElement("strong");
+    nom.textContent = activite.nom;
+
+    const details = document.createElement("p");
+    details.textContent =
+      "📅 " + activite.date +
+      " | ⏱️ " + minutes + " min " + secondes + " s";
+
+    carte.append(nom, details);
+    zone.appendChild(carte);
+  });
+}
+
+afficherMesRandonnees();
 </script>
 
 </body>
