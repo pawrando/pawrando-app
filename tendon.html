@@ -363,7 +363,6 @@ function demarrerRando() {
   if (intervalleRando !== null) return;
 demarrerGPS();
   debutRando = Date.now() - tempsEcoule * 1000;
-
   intervalleRando = setInterval(() => {
     tempsEcoule = Math.floor((Date.now() - debutRando) / 1000);
     afficherChrono();
@@ -371,7 +370,7 @@ demarrerGPS();
 }
 
 function arreterRando() {
-  alert("Le bouton Pause fonctionne !");
+
   if (intervalleRando === null) return;
 
   tempsEcoule = Math.floor((Date.now() - debutRando) / 1000);
@@ -465,10 +464,7 @@ document.getElementById("distanceGPS").textContent =
     }
   );
 }
-  debutRando = null;
-  tempsEcoule = 0;
-  document.getElementById("chronoRando").textContent = "00:00:00";
-}
+  
   function enregistrerRando() {
   if (tempsEcoule === 0) {
     alert("Démarre d'abord ta randonnée !");
