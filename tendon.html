@@ -392,6 +392,7 @@ function arreterRando() {
   let suiviGPS = null;
 let traceGPS = [];
 let marqueurGPS = null;
+  let ligneGPS = null;
 
 function demarrerGPS() {
   if (!navigator.geolocation) {
@@ -405,6 +406,21 @@ function demarrerGPS() {
     position => {
       const latitude = position.coords.latitude;
       const longitude = position.coords.longitude;
+      if (position.coords.accuracy <= 30) {
+  const point = [latitude, longitude];
+
+  traceGPS.push(point);
+
+  if (!ligneGPS) {
+    ligneGPS = L.polyline(traceGPS, {
+      color: "#C76D4D",
+      weight: 5,
+      opacity: 0.9
+    }).addTo(map);
+  } else {
+    ligneGPS.addLatLng(point);
+  }
+}
 
       if (!marqueurGPS) {
         marqueurGPS = L.circleMarker([latitude, longitude], {
