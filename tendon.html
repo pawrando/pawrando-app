@@ -1,1 +1,249 @@
+<!DOCTYPE html>
 
+<html lang="fr">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Cascades de Tendon | PawRando</title>
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+
+  <style>
+
+    body { margin:0; background:#f6f3ed; color:#233e35; font-family:Arial,sans-serif; }
+
+    header { background:#173e35; color:white; padding:20px; text-align:center; }
+
+    header h1 { margin:8px 0; }
+
+    main { max-width:750px; margin:auto; padding:16px; }
+
+    .card { background:white; border-radius:18px; padding:20px; margin-bottom:16px; box-shadow:0 3px 12px #00000010; }
+
+    .btn { display:inline-block; background:#c76d4d; color:white; border:0; border-radius:12px; padding:13px 18px; text-decoration:none; font-weight:bold; cursor:pointer; }
+
+    #map { height:350px; border-radius:14px; margin-top:12px; }
+
+    #profil { width:100%; height:auto; }
+
+    .stats { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+
+    .stat { background:#f6f3ed; padding:14px; border-radius:12px; }
+
+    .stat strong { display:block; margin-top:5px; }
+
+    details { margin-top:14px; }
+
+    summary { cursor:pointer; font-weight:bold; }
+
+  </style>
+
+</head>
+
+<body>
+
+<header>
+
+  <h1>🐾 PawRando</h1>
+
+  <p>💦 Petite et Grande Cascades de Tendon</p>
+
+</header>
+
+<main>
+
+  <a class="btn" href="index.html">← Retour à la carte</a>
+
+  <section class="card">
+
+    <h2>🥾 La randonnée</h2>
+
+    <div class="stats">
+
+      <div class="stat">Distance<strong>7,75 km environ</strong></div>
+
+      <div class="stat">Durée<strong>2 h 30 à 3 h 30</strong></div>
+
+      <div class="stat">Dénivelé positif<strong>+356 m environ</strong></div>
+
+      <div class="stat">Difficulté<strong>Modérée</strong></div>
+
+    </div>
+
+    <p>📍 Tendon, Vosges (88)</p>
+
+    <p>🔄 Parcours en boucle</p>
+
+  </section>
+
+  <section class="card">
+
+    <h2>🗺️ Parcours GPS</h2>
+
+    <p id="statut">Chargement du parcours…</p>
+
+    <div id="map"></div>
+
+  </section>
+
+  <section class="card">
+
+    <h2>🏔️ Profil altimétrique</h2>
+
+    <canvas id="profil" width="600" height="250"></canvas>
+
+  </section>
+
+  <section class="card">
+
+    <details open>
+
+      <summary>📋 Toutes les informations</summary>
+
+      <h3>🐕 Avec son chien</h3>
+
+      <p>Prévoir une laisse, de l'eau, une gamelle et des sacs à déjections.</p>
+
+      <p>Vérifier les restrictions locales et garder son chien sous contrôle, notamment près des cascades.</p>
+
+      <h3>🚗 Accès et équipement</h3>
+
+      <p>Consulter le tracé pour choisir le départ. Vérifier le stationnement sur place.</p>
+
+      <p>Chaussures adaptées recommandées : les passages humides peuvent être glissants.</p>
+
+      <h3>🛡️ Sécurité</h3>
+
+      <p>Vérifier la météo, les conditions du sentier et les informations locales concernant la chasse.</p>
+
+      <p><small>Durée, distance et difficulté indicatives.</small></p>
+
+    </details>
+
+  </section>
+
+</main>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script src="balades.js"></script>
+
+<script>
+
+const map = L.map("map").setView([48.119,6.674],13);
+
+L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+
+  attribution:"© OpenStreetMap contributors",
+
+  maxZoom:19
+
+}).addTo(map);
+
+async function chargerParcours() {
+
+  const statut = document.getElementById("statut");
+
+  try {
+
+    const fichiers = [
+
+      "visorando-les-cascades-de-tendon.gpx"
+
+    ];
+
+    const reponse = await fetch(fichiers[0]);
+
+    if (!reponse.ok) throw new Error("Fichier GPX introuvable");
+
+    const texte = await reponse.text();
+
+    const balade = window.PawRandoBalades.lireGPX(texte);
+
+    if (!balade.coords.length) throw new Error("Parcours vide");
+
+    const trace = L.polyline(
+
+      balade.coords.map(p => [p.lat,p.lon]),
+
+      {color:"#c76d4d",weight:5}
+
+    ).addTo(map);
+
+    map.fitBounds(trace.getBounds(),{padding:[20,20]});
+
+    statut.textContent = "🥾 Parcours GPS chargé : " + balade.distanceKm + " km";
+
+    dessinerProfil(texte);
+
+  } catch(erreur) {
+
+    statut.textContent = "⚠️ " + erreur.message;
+
+  }
+
+}
+
+function dessinerProfil(texte) {
+
+  const xml = new DOMParser().parseFromString(texte,"application/xml");
+
+  const points = [...xml.getElementsByTagName("trkpt")];
+
+  const altitudes = points.map(p => {
+
+    const ele = p.getElementsByTagName("ele")[0];
+
+    return ele ? Number(ele.textContent) : NaN;
+
+  }).filter(Number.isFinite);
+
+  if (altitudes.length < 2) return;
+
+  const canvas = document.getElementById("profil");
+
+  const ctx = canvas.getContext("2d");
+
+  const w = canvas.width, h = canvas.height;
+
+  const min = Math.min(...altitudes);
+
+  const max = Math.max(...altitudes);
+
+  const amplitude = Math.max(max-min,1);
+
+  ctx.clearRect(0,0,w,h);
+
+  ctx.beginPath();
+
+  ctx.strokeStyle = "#c76d4d";
+
+  ctx.lineWidth = 3;
+
+  altitudes.forEach((alt,i) => {
+
+    const x = 20 + i/(altitudes.length-1)*(w-40);
+
+    const y = h-25-(alt-min)/amplitude*(h-50);
+
+    if(i===0) ctx.moveTo(x,y);
+
+    else ctx.lineTo(x,y);
+
+  });
+
+  ctx.stroke();
+
+}
+
+chargerParcours();
+
+</script>
+
+</body>
+
+</html>
