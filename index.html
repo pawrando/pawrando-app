@@ -53,6 +53,21 @@
 .popup-bouton:hover {
   background: #A95F48;
 }
+  /* 🌿 CARTE PREMIUM PAWRANDO */
+
+#map {
+  border: 3px solid #A7B69D;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(41,75,58,0.15);
+  margin-top: 15px;
+  margin-bottom: 20px;
+}
+
+.leaflet-popup-content-wrapper {
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(41,75,58,0.18);
+}
 </style></head><body><header class="entete-pawrando">
   <img
     src="logo-pawrando.png"
@@ -458,7 +473,7 @@ pointTendon.bindPopup(`
   <div class="popup-pawrando">
 
     <img
-      src="photo-tendon.jpg"
+      src="photo-tendon.png"
       alt="Cascades de Tendon"
       class="popup-photo"
       onerror="this.style.display='none'"
