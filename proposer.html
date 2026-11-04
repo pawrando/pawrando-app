@@ -1,1 +1,257 @@
 
+
+<!DOCTYPE html>
+
+<html lang="fr">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Proposer une randonnée | PawRando</title>
+
+<style>
+
+* { box-sizing: border-box; }
+
+body {
+
+  margin: 0;
+
+  font-family: Arial, sans-serif;
+
+  background: #f7f4ef;
+
+  color: #24463b;
+
+}
+
+header {
+
+  background: #24463b;
+
+  color: white;
+
+  padding: 28px 18px;
+
+  text-align: center;
+
+}
+
+main { max-width: 650px; margin: auto; padding: 18px; }
+
+.card {
+
+  background: white;
+
+  border-radius: 18px;
+
+  padding: 22px;
+
+  box-shadow: 0 3px 12px #00000012;
+
+}
+
+h1 { margin: 0 0 10px; }
+
+h2 { font-size: 21px; }
+
+label {
+
+  display: block;
+
+  font-weight: bold;
+
+  margin: 18px 0 7px;
+
+}
+
+input, select, textarea {
+
+  width: 100%;
+
+  padding: 13px;
+
+  border: 1px solid #ccc;
+
+  border-radius: 10px;
+
+  font: inherit;
+
+}
+
+textarea { min-height: 110px; }
+
+button, .btn {
+
+  display: block;
+
+  width: 100%;
+
+  padding: 15px;
+
+  border: none;
+
+  border-radius: 12px;
+
+  background: #c76d4d;
+
+  color: white;
+
+  font-weight: bold;
+
+  font-size: 16px;
+
+  text-align: center;
+
+  text-decoration: none;
+
+  margin-top: 20px;
+
+  cursor: pointer;
+
+}
+
+.note { color: #66756e; font-size: 13px; }
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+<h1>🐾 PawRando</h1>
+
+<p>Proposer une randonnée</p>
+
+</header>
+
+<main>
+
+<a class="btn" href="index.html">← Retour à la carte</a>
+
+<section class="card">
+
+<h2>🥾 Partage ta balade !</h2>
+
+<p>Fais découvrir ton itinéraire aux autres passionnés de randonnée avec leurs chiens.</p>
+
+<form id="proposition">
+
+<label for="nom">Nom de la randonnée *</label>
+
+<input id="nom" required placeholder="Ex : Tour du lac de Gérardmer">
+
+<label for="lieu">Commune et département *</label>
+
+<input id="lieu" required placeholder="Ex : Gérardmer, Vosges">
+
+<label for="distance">Distance (km)</label>
+
+<input id="distance" type="number" min="0" step="0.01">
+
+<label for="duree">Durée estimée</label>
+
+<input id="duree" placeholder="Ex : 2 h 30">
+
+<label for="difficulte">Difficulté</label>
+
+<select id="difficulte">
+
+<option>Facile</option>
+
+<option>Modérée</option>
+
+<option>Difficile</option>
+
+</select>
+
+<label for="chiens">Informations pour les chiens *</label>
+
+<textarea id="chiens" required placeholder="Points d'eau, passages difficiles, laisse, dangers..."></textarea>
+
+<label for="description">Description du parcours *</label>
+
+<textarea id="description" required placeholder="Départ, itinéraire, paysages, conseils..."></textarea>
+
+<label for="gpx">Fichier GPX (facultatif)</label>
+
+<input id="gpx" type="file" accept=".gpx">
+
+<p class="note">Le fichier GPX ne sera pas joint automatiquement à l'e-mail. Conserve-le pour pouvoir nous le transmettre séparément.</p>
+
+<label for="contact">Ton adresse e-mail *</label>
+
+<input id="contact" type="email" required placeholder="exemple@email.fr">
+
+<button type="submit">🧡 Préparer ma proposition</button>
+
+</form>
+
+<p class="note">Chaque proposition sera examinée avant une éventuelle publication sur PawRando.</p>
+
+</section>
+
+</main>
+
+<script>
+
+document.getElementById("proposition").addEventListener("submit", function(e) {
+
+  e.preventDefault();
+
+  const valeur = id => document.getElementById(id).value;
+
+  const message =
+
+    "PROPOSITION DE RANDONNÉE PAWRANDO\n\n" +
+
+    "Nom : " + valeur("nom") + "\n" +
+
+    "Lieu : " + valeur("lieu") + "\n" +
+
+    "Distance : " + valeur("distance") + " km\n" +
+
+    "Durée : " + valeur("duree") + "\n" +
+
+    "Difficulté : " + valeur("difficulte") + "\n\n" +
+
+    "Informations chiens :\n" + valeur("chiens") + "\n\n" +
+
+    "Description :\n" + valeur("description") + "\n\n" +
+
+    "Contact : " + valeur("contact") + "\n" +
+
+    "Fichier GPX : " +
+
+    (document.getElementById("gpx").files[0]?.name || "Aucun");
+
+  const destinataire = "REMPLACER_PAR_TON_EMAIL";
+
+  if (destinataire === "REMPLACER_PAR_TON_EMAIL") {
+
+    alert("Il faut configurer l'adresse de réception avant d'envoyer une proposition.");
+
+    return;
+
+  }
+
+  window.location.href =
+
+    "mailto:" + destinataire +
+
+    "?subject=" + encodeURIComponent("Nouvelle randonnée PawRando") +
+
+    "&body=" + encodeURIComponent(message);
+
+});
+
+</script>
+
+</body>
+
+</html>
