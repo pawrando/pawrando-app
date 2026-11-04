@@ -408,7 +408,9 @@ conteneur.querySelector("#appliquerFiltres").onclick = () => {
   const duree = conteneur.querySelector("#filtreDuree").value;
   const parcours = conteneur.querySelector("#filtreParcours").value;
   const chien = conteneur.querySelector("#filtreChien").checked;
-
+if (!map.hasLayer(pointTendon)) {
+  pointTendon.addTo(map);
+}
   const distanceOK =
     distance === "tous" || distance === "10";
 
