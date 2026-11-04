@@ -324,67 +324,7 @@ function allerPageRando(numero) {
 </script>
 
 
-<script>
 
-let debutRando = 0;
-
-let tempsEcoule = 0;
-
-let chronoRando = null;
-
-function afficherTempsRando() {
-
-  const secondes = Math.floor(tempsEcoule / 1000);
-
-  const h = String(Math.floor(secondes / 3600)).padStart(2, "0");
-
-  const m = String(Math.floor((secondes % 3600) / 60)).padStart(2, "0");
-
-  const s = String(secondes % 60).padStart(2, "0");
-
-  document.getElementById("tempsRando").textContent =
-
-    `${h}:${m}:${s}`;
-
-}
-
-function demarrerRando() {
-
-  const bouton = document.getElementById("boutonRando");
-
-  if (chronoRando !== null) {
-
-    tempsEcoule += Date.now() - debutRando;
-
-    clearInterval(chronoRando);
-
-    chronoRando = null;
-
-    bouton.textContent = "▶ Reprendre ma randonnée";
-
-  } else {
-
-    debutRando = Date.now();
-
-    chronoRando = setInterval(() => {
-
-      const temps = Date.now() - debutRando;
-
-      tempsEcoule += temps;
-
-      debutRando = Date.now();
-
-      afficherTempsRando();
-
-    }, 1000);
-
-    bouton.textContent = "⏸ Mettre en pause";
-
-  }
-
-}
-
-</script>
   
 <script>
 let debutRando = null;
