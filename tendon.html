@@ -495,16 +495,10 @@ const activite = {
   );
 
   alert("🐾 Randonnée enregistrée !");
-  function arreterRando() {
-  if (intervalleRando === null) return;
-
-  clearInterval(intervalleRando);
-  intervalleRando = null;
-
-  tempsEcoule = Math.floor((Date.now() - debutRando) / 1000);
-  afficherChrono();
-  arreterGPS();
-}
+    clearInterval(intervalleRando);
+intervalleRando = null;
+tempsEcoule = 0;
+afficherChrono();
     traceGPS = [];
 distanceParcourue = 0;
 
