@@ -356,7 +356,13 @@ function afficherChrono() {
 }
 let suiviGPS = null;
 let traceGPS = [];
-
+  
+function arreterGPS() {
+  if (suiviGPS !== null) {
+    navigator.geolocation.clearWatch(suiviGPS);
+    suiviGPS = null;
+  }
+}
 function demarrerGPS() {
   if (!navigator.geolocation) {
     alert("Le GPS n'est pas disponible sur cet appareil.");
@@ -486,11 +492,15 @@ document.getElementById("distanceGPS").textContent =
     return;
   }
 
-  const activite = {
-    nom: "Cascades de Tendon",
-    date: new Date().toLocaleString("fr-FR"),
-    duree: tempsEcoule
-  };
+  arreterGPS();
+
+const activite = {
+  nom: "Cascades de Tendon",
+  date: new Date().toLocaleString("fr-FR"),
+  duree: tempsEcoule,
+  distance: distanceParcourue,
+  trace: [...traceGPS]
+};
 
   const activites = JSON.parse(
     localStorage.getItem("pawrando_activites") || "[]"
