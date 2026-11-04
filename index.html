@@ -281,4 +281,13 @@ if (afficherCarte) alert("Cascades de Tendon : " + balade.distanceKm + " km");
 window.addEventListener("load", () => {
   voirTendon(false);
 });
+  
+const pointTendon = L.marker([48.119, 6.674]).addTo(map);
+
+pointTendon.bindPopup(`
+  <strong>💦 Cascades de Tendon</strong>
+  <p>🥾 Randonnée : 7,75 km</p>
+  <button onclick="voirTendon()">🗺️ Voir le parcours</button>
+`);
+
 </script></body></html>
