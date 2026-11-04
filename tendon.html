@@ -90,6 +90,13 @@
 </header>
 
 <main>
+  
+<div class="navigation-rando">
+  <button type="button" onclick="document.querySelector('.pages-rando').scrollTo({left:0,behavior:'smooth'})">🗺️ Parcours</button>
+  <button type="button" onclick="allerPageRando(1)">🧭 Indications</button>
+  <button type="button" onclick="allerPageRando(2)">📸 Photos</button>
+</div>
+
   <div class="pages-rando">
   <div class="page-rando">
 
@@ -297,6 +304,16 @@ function dessinerProfil(texte) {
 
 chargerParcours();
 
+</script>
+
+<script>
+function allerPageRando(numero) {
+  const conteneur = document.querySelector(".pages-rando");
+  conteneur.scrollTo({
+    left: conteneur.clientWidth * numero,
+    behavior: "smooth"
+  });
+}
 </script>
 
 </body>
