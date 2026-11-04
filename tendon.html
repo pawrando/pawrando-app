@@ -515,6 +515,20 @@ const activite = {
 
   alert("🐾 Randonnée enregistrée !");
   arreterRando();
+    traceGPS = [];
+distanceParcourue = 0;
+
+document.getElementById("distanceGPS").textContent = "0.00 km";
+
+if (ligneGPS) {
+  map.removeLayer(ligneGPS);
+  ligneGPS = null;
+}
+
+if (marqueurGPS) {
+  map.removeLayer(marqueurGPS);
+  marqueurGPS = null;
+}
   afficherMesRandonnees();
 }
 function afficherMesRandonnees() {
