@@ -293,4 +293,128 @@ boutonRecherche.onAdd = function () {
 };
 
 boutonRecherche.addTo(map);
+
+const boutonFiltres = L.control({ position: "topright" });
+
+boutonFiltres.onAdd = function () {
+  const conteneur = L.DomUtil.create("div");
+
+  conteneur.innerHTML = `
+    <button id="ouvrirFiltres" style="
+      background:#20473F;
+      color:white;
+      border:2px solid #C76D4D;
+      border-radius:12px;
+      padding:12px;
+      font-weight:bold;
+      cursor:pointer;
+    ">⚙️ Filtres</button>
+
+    <div id="panneauFiltres" style="
+      display:none;
+      background:#F7F4EF;
+      padding:15px;
+      border-radius:15px;
+      margin-top:8px;
+      width:245px;
+      max-width:calc(100vw - 65px);
+      max-height:55vh;
+      overflow-y:auto;
+      box-shadow:0 4px 15px #0003;
+      color:#20473F;
+    ">
+      <h3>🐾 Filtrer les randonnées</h3>
+
+      <label>🥾 Distance</label>
+      <select id="filtreDistance">
+        <option value="tous">Toutes</option>
+        <option value="5">Moins de 5 km</option>
+        <option value="10">5 à 10 km</option>
+        <option value="15">10 à 15 km</option>
+        <option value="plus">Plus de 15 km</option>
+      </select>
+
+      <label>⛰️ Difficulté</label>
+      <select id="filtreDifficulte">
+        <option value="tous">Toutes</option>
+        <option value="facile">Facile</option>
+        <option value="moderee">Modérée</option>
+        <option value="difficile">Difficile</option>
+      </select>
+
+      <label>⏱️ Durée</label>
+      <select id="filtreDuree">
+        <option value="tous">Toutes</option>
+        <option value="2">Moins de 2 h</option>
+        <option value="4">2 à 4 h</option>
+        <option value="plus">Plus de 4 h</option>
+      </select>
+
+      <label>🔄 Type de parcours</label>
+      <select id="filtreParcours">
+        <option value="tous">Tous les parcours</option>
+        <option value="boucle">Boucle</option>
+        <option value="aller-retour">Aller-retour</option>
+        <option value="point-a-b">Point A → Point B</option>
+      </select>
+
+      <label style="display:block;margin-top:12px">
+        <input type="checkbox" id="filtreChien">
+        🐕 Adaptée aux chiens
+      </label>
+
+      <button id="appliquerFiltres" style="
+        background:#C76D4D;
+        color:white;
+        border:none;
+        border-radius:10px;
+        padding:12px;
+        width:100%;
+        margin-top:15px;
+        font-weight:bold;
+      ">Afficher les résultats</button>
+
+      <button id="reinitialiserFiltres" style="
+        background:#20473F;
+        color:white;
+        border:none;
+        border-radius:10px;
+        padding:10px;
+        width:100%;
+        margin-top:8px;
+      ">Réinitialiser</button>
+    </div>
+  `;
+
+  L.DomEvent.disableClickPropagation(conteneur);
+  L.DomEvent.disableScrollPropagation(conteneur);
+
+  conteneur.querySelectorAll("select").forEach(select => {
+    select.style.cssText =
+      "display:block;width:100%;padding:9px;margin:7px 0 13px;border:1px solid #C76D4D;border-radius:8px;background:white;color:#20473F;";
+  });
+
+  const panneau = conteneur.querySelector("#panneauFiltres");
+
+  conteneur.querySelector("#ouvrirFiltres").onclick = () => {
+    panneau.style.display =
+      panneau.style.display === "none" ? "block" : "none";
+  };
+
+  conteneur.querySelector("#appliquerFiltres").onclick = () => {
+    alert("Filtres enregistrés pour la recherche 🐾");
+    panneau.style.display = "none";
+  };
+
+  conteneur.querySelector("#reinitialiserFiltres").onclick = () => {
+    panneau.querySelectorAll("select").forEach(select => {
+      select.value = "tous";
+    });
+    conteneur.querySelector("#filtreChien").checked = false;
+  };
+
+  return conteneur;
+};
+
+boutonFiltres.addTo(map);
 </script></body></html>
