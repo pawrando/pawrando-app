@@ -389,6 +389,47 @@ demarrerGPS();
 function arreterRando() {
   clearInterval(intervalleRando);
   intervalleRando = null;
+  let suiviGPS = null;
+let traceGPS = [];
+let marqueurGPS = null;
+
+function demarrerGPS() {
+  if (!navigator.geolocation) {
+    alert("GPS non disponible sur cet appareil.");
+    return;
+  }
+
+  if (suiviGPS !== null) return;
+
+  suiviGPS = navigator.geolocation.watchPosition(
+    position => {
+      const latitude = position.coords.latitude;
+      const longitude = position.coords.longitude;
+
+      if (!marqueurGPS) {
+        marqueurGPS = L.circleMarker([latitude, longitude], {
+          radius: 10,
+          color: "#ffffff",
+          weight: 3,
+          fillColor: "#C76D4D",
+          fillOpacity: 1
+        }).addTo(map);
+
+        map.setView([latitude, longitude], 16);
+      } else {
+        marqueurGPS.setLatLng([latitude, longitude]);
+      }
+    },
+    erreur => {
+      console.warn("Erreur GPS :", erreur.message);
+    },
+    {
+      enableHighAccuracy: true,
+      maximumAge: 0,
+      timeout: 15000
+    }
+  );
+}
   debutRando = null;
   tempsEcoule = 0;
   document.getElementById("chronoRando").textContent = "00:00:00";
