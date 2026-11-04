@@ -266,4 +266,31 @@ boutonGPS.onAdd = function () {
 };
 
 boutonGPS.addTo(map);
+
+const boutonRecherche = L.control({ position: "bottomleft" });
+
+boutonRecherche.onAdd = function () {
+  const bouton = L.DomUtil.create("button");
+
+  bouton.innerHTML = "🔎 Rechercher dans cette zone";
+  bouton.style.cssText = `
+    background:#C76D4D;
+    color:white;
+    border:none;
+    border-radius:12px;
+    padding:12px;
+    font-weight:bold;
+    cursor:pointer;
+  `;
+
+  L.DomEvent.disableClickPropagation(bouton);
+
+  bouton.onclick = function () {
+    alert("La recherche des randonnées arrive bientôt 🐾");
+  };
+
+  return bouton;
+};
+
+boutonRecherche.addTo(map);
 </script></body></html>
