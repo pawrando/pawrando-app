@@ -401,10 +401,45 @@ boutonFiltres.onAdd = function () {
       panneau.style.display === "none" ? "block" : "none";
   };
 
-  conteneur.querySelector("#appliquerFiltres").onclick = () => {
-    alert("Filtres enregistrés pour la recherche 🐾");
-    panneau.style.display = "none";
-  };
+
+conteneur.querySelector("#appliquerFiltres").onclick = () => {
+  const distance = conteneur.querySelector("#filtreDistance").value;
+  const difficulte = conteneur.querySelector("#filtreDifficulte").value;
+  const duree = conteneur.querySelector("#filtreDuree").value;
+  const parcours = conteneur.querySelector("#filtreParcours").value;
+  const chien = conteneur.querySelector("#filtreChien").checked;
+
+  const distanceOK =
+    distance === "tous" || distance === "10";
+
+  const difficulteOK =
+    difficulte === "tous" || difficulte === "moderee";
+
+  const dureeOK =
+    duree === "tous" || duree === "4";
+
+  const parcoursOK =
+    parcours === "tous" || parcours === "boucle";
+
+  const chienOK = true;
+
+  const afficher =
+    distanceOK && difficulteOK && dureeOK &&
+    parcoursOK && chienOK;
+
+  if (afficher) {
+    if (!map.hasLayer(pointTendon)) {
+      pointTendon.addTo(map);
+    }
+  } else {
+    if (map.hasLayer(pointTendon)) {
+      map.removeLayer(pointTendon);
+    }
+  }
+
+  panneau.style.display = "none";
+};
+
 
   conteneur.querySelector("#reinitialiserFiltres").onclick = () => {
     panneau.querySelectorAll("select").forEach(select => {
