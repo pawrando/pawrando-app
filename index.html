@@ -453,5 +453,7 @@ if (!map.hasLayer(pointTendon)) {
   return conteneur;
 };
 
-boutonFiltres.addTo(map);
+document.getElementById("zoneFiltres").appendChild(
+  boutonFiltres.onAdd(map)
+);
 </script></body></html>
