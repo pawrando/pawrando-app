@@ -316,11 +316,12 @@ row-gap:12px;
       box-shadow:0 4px 15px #0003;
       color:#20473F;
     ">
-     <style>
+    
 .grille-filtres {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
+  column-gap: 12px;
+row-gap: 8px;
   width: 100%;
 }
 
@@ -337,6 +338,17 @@ row-gap:12px;
 .filtre-item select {
   width: 100%;
   box-sizing: border-box;
+}
+#panneauFiltres input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  accent-color: #C76D4D;
+  vertical-align: middle;
+  margin: 0 8px 0 0;
+} 
+#panneauFiltres input[type="checkbox"] + label {
+  display: inline;
+  vertical-align: middle;
 }
 </style>
 <h3>🐾 Filtrer les randonnées</h3>
