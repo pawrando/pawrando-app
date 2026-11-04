@@ -409,13 +409,11 @@ function arreterRando() {
   arreterGPS();
 }
  
-  clearInterval(intervalleRando);
-  intervalleRando = null;
-  let suiviGPS = null;
+let suiviGPS = null;
 let traceGPS = [];
 let marqueurGPS = null;
-  let ligneGPS = null;
-  let distanceParcourue = 0;
+let ligneGPS = null;
+let distanceParcourue = 0;
 
 function calculerDistance(point1, point2) {
   const R = 6371;
