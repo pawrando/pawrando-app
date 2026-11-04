@@ -385,6 +385,44 @@ function demarrerRando() {
 }
 
 </script>
+  
+<script>
+let debutRando = null;
+let tempsEcoule = 0;
+let intervalleRando = null;
+
+function afficherChrono() {
+  const heures = Math.floor(tempsEcoule / 3600);
+  const minutes = Math.floor((tempsEcoule % 3600) / 60);
+  const secondes = tempsEcoule % 60;
+
+  document.getElementById("chronoRando").textContent =
+    [heures, minutes, secondes]
+      .map(n => String(n).padStart(2, "0"))
+      .join(":");
+}
+
+function demarrerRando() {
+  if (intervalleRando !== null) return;
+
+  debutRando = Date.now() - tempsEcoule * 1000;
+
+  intervalleRando = setInterval(() => {
+    tempsEcoule = Math.floor((Date.now() - debutRando) / 1000);
+    afficherChrono();
+  }, 1000);
+}
+
+function arreterRando() {
+  if (intervalleRando === null) return;
+
+  clearInterval(intervalleRando);
+  intervalleRando = null;
+  tempsEcoule = Math.floor((Date.now() - debutRando) / 1000);
+  afficherChrono();
+}
+</script>
+
 </body>
 
 </html>
