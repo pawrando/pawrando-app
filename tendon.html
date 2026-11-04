@@ -398,6 +398,32 @@ main h4 {
   margin: 0 auto 12px;
   filter: drop-shadow(0 6px 14px rgba(0,0,0,0.15));
 }
+    /* 📸 GALERIE PHOTOS PAWRANDO */
+
+.galerie-pawrando {
+  background: linear-gradient(135deg, #FFFFFF, #EDF3E9);
+  border: 1px solid #DCE5D8;
+  border-radius: 18px;
+  padding: 12px;
+  margin-top: 18px;
+  box-shadow: 0 5px 16px rgba(41,75,58,0.08);
+}
+
+.galerie-pawrando img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 450px;
+  object-fit: cover;
+  border-radius: 13px;
+}
+
+.galerie-pawrando p {
+  text-align: center;
+  color: #356B68;
+  font-size: 14px;
+  margin: 12px 0 4px;
+}
 </style>
 
 </head>
@@ -1035,12 +1061,21 @@ main h4 {
     </section>
   </div>
 
-  <div class="page-rando">
-    <section class="card">
-      <h2>📸 Photos de la randonnée</h2>
-      <p>Les photos des Cascades de Tendon apparaîtront ici.</p>
-    </section>
-  </div>
+<div class="page-rando">
+  <section class="card">
+    <h2>📸 Photos de la randonnée</h2>
+
+    <div class="galerie-pawrando">
+      <img
+        src="photo-tendon.png"
+        alt="Les Cascades de Tendon dans les Vosges"
+        loading="lazy"
+      >
+
+      <p>💦 Les magnifiques Cascades de Tendon, au cœur des Vosges.</p>
+    </div>
+
+  </section>
 </div>
 
 </main>
