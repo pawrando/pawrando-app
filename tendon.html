@@ -398,6 +398,9 @@ demarrerGPS();
 }
 
 function arreterRando() {
+  tempsEcoule = 0;
+debutRando = null;
+afficherChrono();
   clearInterval(intervalleRando);
   intervalleRando = null;
   let suiviGPS = null;
