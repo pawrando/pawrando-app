@@ -395,7 +395,7 @@ boutonFiltres.onAdd = function () {
   });
 
   const panneau = conteneur.querySelector("#panneauFiltres");
-
+panneau.style.display = "block";
   conteneur.querySelector("#ouvrirFiltres").onclick = () => {
     panneau.style.display =
       panneau.style.display === "none" ? "block" : "none";
