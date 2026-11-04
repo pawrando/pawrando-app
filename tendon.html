@@ -121,6 +121,9 @@
 <div style="text-align:center; margin:20px 0;">
   <h3>⏱️ Mon activité</h3>
   <p id="chronoRando" style="font-size:28px;font-weight:bold;">00:00:00</p>
+  <p>🥾 Distance parcourue :
+  <strong id="distanceGPS">0.00 km</strong>
+</p>
   <button class="btn" onclick="demarrerRando()">▶️ Démarrer ma randonnée</button>
   <button class="btn" onclick="arreterRando()">⏹️ Arrêter</button>
   <button class="btn" onclick="enregistrerRando()">
@@ -393,6 +396,21 @@ function arreterRando() {
 let traceGPS = [];
 let marqueurGPS = null;
   let ligneGPS = null;
+  let distanceParcourue = 0;
+
+function calculerDistance(point1, point2) {
+  const R = 6371;
+  const dLat = (point2[0] - point1[0]) * Math.PI / 180;
+  const dLon = (point2[1] - point1[1]) * Math.PI / 180;
+
+  const a =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(point1[0] * Math.PI / 180) *
+    Math.cos(point2[0] * Math.PI / 180) *
+    Math.sin(dLon / 2) ** 2;
+
+  return 2 * R * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
 
 function demarrerGPS() {
   if (!navigator.geolocation) {
@@ -408,7 +426,17 @@ function demarrerGPS() {
       const longitude = position.coords.longitude;
       if (position.coords.accuracy <= 30) {
   const point = [latitude, longitude];
+if (traceGPS.length > 0) {
+  const dernierPoint = traceGPS[traceGPS.length - 1];
+  const distance = calculerDistance(dernierPoint, point);
 
+  if (distance >= 0.005 && distance <= 0.2) {
+    distanceParcourue += distance;
+  }
+}
+
+document.getElementById("distanceGPS").textContent =
+  distanceParcourue.toFixed(2) + " km";
   traceGPS.push(point);
 
   if (!ligneGPS) {
