@@ -123,6 +123,9 @@
   <p id="chronoRando" style="font-size:28px;font-weight:bold;">00:00:00</p>
   <button class="btn" onclick="demarrerRando()">▶️ Démarrer ma randonnée</button>
   <button class="btn" onclick="arreterRando()">⏹️ Arrêter</button>
+  <button class="btn" onclick="enregistrerRando()">
+  💾 Terminer et enregistrer
+</button>
 </div>
 
     <p>📍 Tendon, Vosges (88)</p>
@@ -359,6 +362,32 @@ function arreterRando() {
   debutRando = null;
   tempsEcoule = 0;
   document.getElementById("chronoRando").textContent = "00:00:00";
+}
+  function enregistrerRando() {
+  if (tempsEcoule === 0) {
+    alert("Démarre d'abord ta randonnée !");
+    return;
+  }
+
+  const activite = {
+    nom: "Cascades de Tendon",
+    date: new Date().toLocaleString("fr-FR"),
+    duree: tempsEcoule
+  };
+
+  const activites = JSON.parse(
+    localStorage.getItem("pawrando_activites") || "[]"
+  );
+
+  activites.push(activite);
+
+  localStorage.setItem(
+    "pawrando_activites",
+    JSON.stringify(activites)
+  );
+
+  alert("🐾 Randonnée enregistrée !");
+  arreterRando();
 }
 </script>
 
