@@ -532,8 +532,10 @@ const activite = {
   intervalleRando = null;
 
   tempsEcoule = Math.floor((Date.now() - debutRando) / 1000);
-  afficherChrono();
+ clearInterval(intervalleRando);
+  intervalleRando = null;
 
+  afficherChrono();
   arreterGPS();
 }
     traceGPS = [];
