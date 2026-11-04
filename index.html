@@ -282,12 +282,23 @@ window.addEventListener("load", () => {
   voirTendon(false);
 });
   
-const pointTendon = L.marker([48.119, 6.674]).addTo(map);
+
+const iconeTendon = L.divIcon({
+  className: "point-rando",
+  html: '<div style="background:#C76D4D;width:22px;height:22px;border:3px solid white;border-radius:50%;box-shadow:0 2px 8px #555;"></div>',
+  iconSize: [28, 28],
+  iconAnchor: [14, 14]
+});
+
+const pointTendon = L.marker([48.119, 6.674], {
+  icon: iconeTendon
+}).addTo(map);
 
 pointTendon.bindPopup(`
   <strong>💦 Cascades de Tendon</strong>
-  <p>🥾 Randonnée : 7,75 km</p>
-  <button onclick="voirTendon()">🗺️ Voir le parcours</button>
+  <p>🥾 7,75 km · Vosges</p>
+  <button onclick="voirTendon()">Voir le parcours</button>
 `);
+
 
 </script></body></html>
