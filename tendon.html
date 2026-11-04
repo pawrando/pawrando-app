@@ -355,6 +355,39 @@ main h4 {
   border-radius: 14px;
   box-shadow: 0 4px 12px rgba(41,75,58,0.18);
 }
+    /* 🐾 PAWRANDO — ÉTAPES NUMÉROTÉES */
+
+.etape-rando {
+  position: relative;
+  background: linear-gradient(135deg, #FFFFFF, #EDF3E9);
+  border: 1px solid #DCE5D8;
+  border-left: 4px solid #BF785E;
+  border-radius: 18px;
+  padding: 20px;
+  margin: 18px 0;
+  box-shadow: 0 5px 16px rgba(41,75,58,0.08);
+}
+
+.etape-rando h3 {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 0;
+}
+
+.numero-etape {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 42px;
+  height: 42px;
+  background: #BF785E;
+  color: white;
+  border-radius: 13px;
+  font-size: 16px;
+  font-weight: bold;
+}
 </style>
 
 </head>
@@ -505,7 +538,10 @@ main h4 {
 
     <hr>
 
-    <h3>🚩 Départ — Parking de la Petite Cascade</h3>
+  <h3>
+  <span class="numero-etape">01</span>
+  🚩 Départ — Parking de la Petite Cascade
+</h3>
 
     <p>
       Le départ se fait depuis le parking de la
