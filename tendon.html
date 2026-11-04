@@ -40,7 +40,42 @@
 
     summary { cursor:pointer; font-weight:bold; }
 
-  </style>
+  
+/* Navigation entre les 3 écrans */
+.pages-rando {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+}
+
+.pages-rando::-webkit-scrollbar {
+  display: none;
+}
+
+.page-rando {
+  flex: 0 0 100%;
+  min-width: 0;
+  scroll-snap-align: start;
+}
+
+.navigation-rando {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 16px 0;
+}
+
+.navigation-rando button {
+  background: #C76D4D;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 12px;
+  cursor: pointer;
+}
+</style>
 
 </head>
 
@@ -55,6 +90,8 @@
 </header>
 
 <main>
+  <div class="pages-rando">
+  <div class="page-rando">
 
   <a class="btn" href="index.html">← Retour à la carte</a>
 
@@ -125,6 +162,24 @@
     </details>
 
   </section>
+
+  </div>
+
+  <div class="page-rando">
+    <section class="card">
+      <h2>🧭 Indications du parcours</h2>
+      <p>Retrouve ici les étapes à suivre pendant la randonnée.</p>
+      <p>Les directions détaillées seront ajoutées après vérification de l'itinéraire.</p>
+    </section>
+  </div>
+
+  <div class="page-rando">
+    <section class="card">
+      <h2>📸 Photos de la randonnée</h2>
+      <p>Les photos des Cascades de Tendon apparaîtront ici.</p>
+    </section>
+  </div>
+</div>
 
 </main>
 
