@@ -351,38 +351,13 @@ function afficherChrono() {
       .map(n => String(n).padStart(2, "0"))
       .join(":");
 }
-let suiviGPS = null;
-let traceGPS = [];
   
 function arreterGPS() {
   if (suiviGPS !== null) {
     navigator.geolocation.clearWatch(suiviGPS);
     suiviGPS = null;
-  }
 }
-function demarrerGPS() {
-  if (!navigator.geolocation) {
-    alert("Le GPS n'est pas disponible sur cet appareil.");
-    return;
-  }
-
-  suiviGPS = navigator.geolocation.watchPosition(
-    position => {
-      const latitude = position.coords.latitude;
-      const longitude = position.coords.longitude;
-
-      console.log("Position GPS :", latitude, longitude);
-    },
-    erreur => {
-      console.warn("Erreur GPS :", erreur.message);
-    },
-    {
-      enableHighAccuracy: true,
-      maximumAge: 0,
-      timeout: 15000
-    }
-  );
-}
+  
 function demarrerRando() {
   if (intervalleRando !== null) return;
 demarrerGPS();
