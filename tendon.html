@@ -127,7 +127,7 @@
 </p>
 
   <button class="btn" onclick="demarrerRando()">▶️ Démarrer ma randonnée</button>
-  <button class="btn" onclick="arreterRando()">⏹️ Arrêter</button>
+ <button class="btn" onclick="arreterRando()">⏸️ Pause</button>
   <button class="btn" onclick="enregistrerRando()">
   💾 Terminer et enregistrer
 </button>
@@ -514,7 +514,17 @@ const activite = {
   );
 
   alert("🐾 Randonnée enregistrée !");
-  arreterRando();
+  function arreterRando() {
+  if (intervalleRando === null) return;
+
+  clearInterval(intervalleRando);
+  intervalleRando = null;
+
+  tempsEcoule = Math.floor((Date.now() - debutRando) / 1000);
+  afficherChrono();
+
+  arreterGPS();
+}
     traceGPS = [];
 distanceParcourue = 0;
 
