@@ -544,9 +544,10 @@ function afficherMesRandonnees() {
     nom.textContent = activite.nom;
 
     const details = document.createElement("p");
-    details.textContent =
-      "📅 " + activite.date +
-      " | ⏱️ " + minutes + " min " + secondes + " s";
+   details.textContent =
+  "📅 " + activite.date +
+  " | ⏱️ " + minutes + " min " + secondes + " s" +
+  " | 🥾 " + (activite.distance || 0).toFixed(2) + " km";
 
     carte.append(nom, details);
     zone.appendChild(carte);
