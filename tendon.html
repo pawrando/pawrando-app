@@ -398,6 +398,16 @@ demarrerGPS();
 }
 
 function arreterRando() {
+  if (intervalleRando === null) return;
+
+  tempsEcoule = Math.floor((Date.now() - debutRando) / 1000);
+
+  clearInterval(intervalleRando);
+  intervalleRando = null;
+
+  afficherChrono();
+  arreterGPS();
+}
   tempsEcoule = 0;
 debutRando = null;
 afficherChrono();
