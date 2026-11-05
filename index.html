@@ -1104,7 +1104,21 @@ function afficherSignalementsSauvegardes() {
   }
 
   if (!Array.isArray(signalements)) return;
+/* 🛡️ Filtrer les signalements par catégorie */
 
+const filtreActif = document.querySelector(
+  ".filtre-danger.actif"
+);
+
+const categorieActive = filtreActif
+  ? filtreActif.dataset.danger
+  : "tous";
+
+if (categorieActive !== "tous") {
+  signalements = signalements.filter(function(signalement) {
+    return signalement.type === categorieActive;
+  });
+}
   signalements.forEach(function(signalement) {
     const latitude = Number(signalement.latitude);
     const longitude = Number(signalement.longitude);
@@ -1204,6 +1218,8 @@ document.querySelectorAll(".filtre-danger").forEach(function(bouton) {
     });
 
     bouton.classList.add("actif");
+    /* Actualiser les points selon le filtre choisi */
+afficherSignalementsSauvegardes();
   });
 });
 </script><!-- 🐾 FORMULAIRE DE SIGNALEMENT PAWRANDO -->
