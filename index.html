@@ -1157,6 +1157,57 @@ if (categorieActive !== "tous") {
 
 /* Affichage au démarrage */
 afficherSignalementsSauvegardes();
+/* 🌍 Signalements publics PawRando */
+
+const coucheSignalementsPublics = L.layerGroup().addTo(carteSecurite);
+
+async function afficherSignalementsPublics() {
+  const { data, error } = await supabasePawRando
+    .from("signalements")
+    .select("id,type,description,latitude,longitude,date_creation")
+    .eq("statut", "valide");
+
+  if (error) {
+    console.error("Erreur de chargement Supabase :", error);
+    return;
+  }
+
+  coucheSignalementsPublics.clearLayers();
+
+  const filtre = document.querySelector(".filtre-danger.actif");
+  const categorie = filtre ? filtre.dataset.danger : "tous";
+
+  (data || []).forEach(function(signalement) {
+    if (categorie !== "tous" && signalement.type !== categorie) return;
+
+    const latitude = Number(signalement.latitude);
+    const longitude = Number(signalement.longitude);
+
+    if (!Number.isFinite(latitude) || !Number.isFinite(longitude)) return;
+
+    const couleur = couleursSignalements[signalement.type] || "#356B68";
+
+    const marqueur = L.circleMarker([latitude, longitude], {
+      radius: 10,
+      color: "#FFFFFF",
+      weight: 2,
+      fillColor: couleur,
+      fillOpacity: 0.95
+    });
+
+    const contenu = document.createElement("div");
+    const titre = document.createElement("strong");
+    const description = document.createElement("p");
+
+    titre.textContent = nomsSignalements[signalement.type] || "🐾 Signalement";
+    description.textContent = signalement.description;
+
+    contenu.append(titre, description);
+
+    marqueur.bindPopup(contenu);
+    marqueur.addTo(coucheSignalementsPublics);
+  });
+}
 /* 🐾 Préparer un signalement sur la carte */
 
 let marqueurSignalement = null;
@@ -1386,4 +1437,28 @@ document.getElementById("description-signalement").value = "";
 /* Fermer le formulaire */
 fermerFormulaireSignalement();
 }
+</script><!-- Connexion Supabase PawRando -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+
+<script>
+const supabasePawRando = window.supabase.createClient(
+  "https://iwsghpzodourvapgbmri.supabase.co",
+  "sb_publishable_FnWqndkfBFA-Gi5Qj2sARg_a4WaWb8C"
+);/* 🛡️ Charger les signalements publics */
+
+afficherSignalementsPublics();
+
+/* Actualiser les alertes publiques toutes les 30 secondes */
+
+setInterval(function() {
+  afficherSignalementsPublics();
+}, 30000);
+
+/* Relier les filtres aux signalements publics */
+
+document.querySelectorAll(".filtre-danger").forEach(function(bouton) {
+  bouton.addEventListener("click", function() {
+    afficherSignalementsPublics();
+  });
+});
 </script></body></html>
