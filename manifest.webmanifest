@@ -1,1 +1,19 @@
-
+{
+  "name": "PawRando — Randonnées avec son chien",
+  "short_name": "PawRando",
+  "description": "Explorez les randonnées avec votre chien.",
+  "lang": "fr",
+  "start_url": "/pawrando-app/",
+  "scope": "/pawrando-app/",
+  "display": "standalone",
+  "background_color": "#F7F5EF",
+  "theme_color": "#294B3A",
+  "icons": [
+    {
+      "src": "logo-pawrando.png",
+      "sizes": "any",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
