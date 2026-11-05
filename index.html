@@ -558,6 +558,13 @@ nav button:active {
   </button>
 
 </div>
+  <button
+  type="button"
+  id="effacer-tests-securite"
+  style="background:#FFF3E5;color:#79512F;border:1px solid #E6C9A6;border-radius:12px;padding:12px;width:100%;margin-bottom:12px;font-weight:600;"
+>
+  🗑️ Effacer mes signalements locaux
+</button>
 <div id="map-securite"
      aria-label="Carte des signalements de sécurité">
 </div>
@@ -1482,4 +1489,25 @@ document.querySelectorAll(".filtre-danger").forEach(function(bouton) {
     afficherSignalementsPublics();
   });
 });
+</script><script>
+document.getElementById("effacer-tests-securite")
+  .addEventListener("click", function() {
+
+    const confirmation = confirm(
+      "Supprimer tous les signalements enregistrés sur cet appareil ? Cette action est irréversible."
+    );
+
+    if (!confirmation) return;
+
+    localStorage.removeItem("pawrando_signalements");
+
+    afficherSignalementsSauvegardes();
+
+    if (marqueurSignalement) {
+      carteSecurite.removeLayer(marqueurSignalement);
+      marqueurSignalement = null;
+    }
+
+    alert("🐾 Les signalements locaux ont été effacés !");
+  });
 </script></body></html>
