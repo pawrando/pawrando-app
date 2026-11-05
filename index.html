@@ -1475,7 +1475,12 @@ function previsualiserSignalement() {
   /* 🐾 Sauvegarde locale du signalement */
 
 const position = marqueurSignalement.getLatLng();
+const dateObservation = document.getElementById("date-observation").value;
 
+if (!dateObservation) {
+  alert("⚠️ Indique la date et l'heure de ton observation.");
+  return;
+}
 const nouveauSignalement = {
   id: Date.now(),
   type: type,
@@ -1483,6 +1488,7 @@ const nouveauSignalement = {
   latitude: position.lat,
   longitude: position.lng,
   date: new Date().toISOString()
+  date_observation: new Date(dateObservation).toISOString(),
 };
 
 const signalements = JSON.parse(
@@ -1504,7 +1510,8 @@ async function envoyerSignalementSupabase() {
       type: nouveauSignalement.type,
       description: nouveauSignalement.description,
       latitude: nouveauSignalement.latitude,
-      longitude: nouveauSignalement.longitude
+     longitude: nouveauSignalement.longitude,
+date_observation: nouveauSignalement.date_observation
     });
 
   if (error) {
