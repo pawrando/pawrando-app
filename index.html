@@ -1069,6 +1069,80 @@ const classiqueSecurite = L.tileLayer(
 
 /* Satellite affiché par défaut */
 satelliteSecurite.addTo(carteSecurite);
+  /* 🐾 Affichage des signalements sauvegardés */
+
+const coucheSignalements = L.layerGroup().addTo(carteSecurite);
+
+const couleursSignalements = {
+  chasse: "#D94B4B",
+  cyanobacteries: "#3488D1",
+  chemin: "#E69A36",
+  danger: "#9859B6",
+  information: "#4A9B68"
+};
+
+const nomsSignalements = {
+  chasse: "🔴 Chasse",
+  cyanobacteries: "🔵 Cyanobactéries",
+  chemin: "🟠 Chemin inaccessible",
+  danger: "🟣 Danger pour les chiens",
+  information: "🟢 Information utile"
+};
+
+function afficherSignalementsSauvegardes() {
+  coucheSignalements.clearLayers();
+
+  let signalements = [];
+
+  try {
+    signalements = JSON.parse(
+      localStorage.getItem("pawrando_signalements") || "[]"
+    );
+  } catch (erreur) {
+    console.error("Impossible de lire les signalements", erreur);
+    return;
+  }
+
+  if (!Array.isArray(signalements)) return;
+
+  signalements.forEach(function(signalement) {
+    const latitude = Number(signalement.latitude);
+    const longitude = Number(signalement.longitude);
+
+    if (!Number.isFinite(latitude) ||
+        !Number.isFinite(longitude)) return;
+
+    const couleur = couleursSignalements[signalement.type] || "#356B68";
+
+    const marqueur = L.circleMarker(
+      [latitude, longitude],
+      {
+        radius: 9,
+        color: "#FFFFFF",
+        weight: 2,
+        fillColor: couleur,
+        fillOpacity: 0.95
+      }
+    );
+
+    const contenu = document.createElement("div");
+    const titre = document.createElement("strong");
+    const description = document.createElement("p");
+
+    titre.textContent =
+      nomsSignalements[signalement.type] || "🐾 Signalement";
+
+    description.textContent = signalement.description || "";
+
+    contenu.append(titre, description);
+
+    marqueur.bindPopup(contenu);
+    marqueur.addTo(coucheSignalements);
+  });
+}
+
+/* Affichage au démarrage */
+afficherSignalementsSauvegardes();
 /* 🐾 Préparer un signalement sur la carte */
 
 let marqueurSignalement = null;
