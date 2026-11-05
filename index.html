@@ -1069,7 +1069,37 @@ const classiqueSecurite = L.tileLayer(
 
 /* Satellite affiché par défaut */
 satelliteSecurite.addTo(carteSecurite);
+/* 🐾 Préparer un signalement sur la carte */
 
+let marqueurSignalement = null;
+
+carteSecurite.on("click", function(e) {
+
+  const latitude = e.latlng.lat;
+  const longitude = e.latlng.lng;
+
+  if (marqueurSignalement) {
+    carteSecurite.removeLayer(marqueurSignalement);
+  }
+
+  marqueurSignalement = L.marker([latitude, longitude])
+    .addTo(carteSecurite);
+
+  marqueurSignalement.bindPopup(`
+    <div style="text-align:center;min-width:180px;">
+      <strong>🐾 Nouveau signalement</strong>
+      <p>Tu souhaites signaler un danger ici ?</p>
+      <button
+        type="button"
+        onclick="alert('Le formulaire de signalement arrive bientôt !')"
+        style="background:#BF785E;color:white;border:0;
+        padding:10px;border-radius:10px;">
+        🚨 Signaler ici
+      </button>
+    </div>
+  `).openPopup();
+
+});
 /* Bouton pour changer de carte */
 L.control.layers(
   {
