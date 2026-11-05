@@ -1259,6 +1259,29 @@ function previsualiserSignalement() {
   popup.append(titre, texte);
 
   marqueurSignalement.bindPopup(popup).openPopup();
+  /* 🐾 Sauvegarde locale du signalement */
+
+const position = marqueurSignalement.getLatLng();
+
+const nouveauSignalement = {
+  id: Date.now(),
+  type: type,
+  description: description,
+  latitude: position.lat,
+  longitude: position.lng,
+  date: new Date().toISOString()
+};
+
+const signalements = JSON.parse(
+  localStorage.getItem("pawrando_signalements") || "[]"
+);
+
+signalements.push(nouveauSignalement);
+
+localStorage.setItem(
+  "pawrando_signalements",
+  JSON.stringify(signalements)
+);
   fermerFormulaireSignalement();
 }
 </script></body></html>
