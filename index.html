@@ -281,6 +281,46 @@ nav button:active {
   line-height: 1.5;
   margin-top: 14px;
 }
+  /* 🛡️ FILTRES PAWRANDO SÉCURITÉ */
+
+.filtres-securite {
+  display: flex;
+  gap: 9px;
+  overflow-x: auto;
+  padding: 12px 4px;
+  margin-bottom: 12px;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.filtres-securite::-webkit-scrollbar {
+  display: none;
+}
+
+.filtre-danger {
+  flex: 0 0 auto;
+  border: 1px solid #A7B69D;
+  border-radius: 25px;
+  padding: 11px 15px;
+  background: white;
+  color: #294B3A;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: 0.2s ease;
+}
+
+.filtre-danger.actif {
+  background: #356B68;
+  color: white;
+  border-color: #356B68;
+  box-shadow: 0 3px 10px rgba(53,107,104,0.2);
+}
+
+.filtre-danger:active {
+  transform: scale(0.96);
+}
 </style></head><body><header class="entete-pawrando">
   <img
     src="logo-pawrando.png"
@@ -490,7 +530,34 @@ nav button:active {
     avant de partir en randonnée avec ton chien.
   </p>
 </div>
+<!-- 🐾 FILTRES SÉCURITÉ -->
+<div class="filtres-securite">
 
+  <button class="filtre-danger actif" data-danger="tous">
+    🌍 Tous
+  </button>
+
+  <button class="filtre-danger" data-danger="chasse">
+    🔴 Chasse
+  </button>
+
+  <button class="filtre-danger" data-danger="cyanobacteries">
+    🔵 Cyanobactéries
+  </button>
+
+  <button class="filtre-danger" data-danger="chemin">
+    🟠 Chemins
+  </button>
+
+  <button class="filtre-danger" data-danger="danger">
+    🟣 Dangers
+  </button>
+
+  <button class="filtre-danger" data-danger="information">
+    🟢 Informations
+  </button>
+
+</div>
 <div id="map-securite"
      aria-label="Carte des signalements de sécurité">
 </div>
@@ -1023,4 +1090,16 @@ document.getElementById("nav-safety")
       carteSecurite.invalidateSize();
     }, 300);
   });
+</script><script>
+/* Sélection visuelle des filtres Sécurité */
+
+document.querySelectorAll(".filtre-danger").forEach(function(bouton) {
+  bouton.addEventListener("click", function() {
+    document.querySelectorAll(".filtre-danger").forEach(function(b) {
+      b.classList.remove("actif");
+    });
+
+    bouton.classList.add("actif");
+  });
+});
 </script></body></html>
