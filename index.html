@@ -1416,6 +1416,23 @@ afficherSignalementsSauvegardes();
         border-radius:10px;
         resize:vertical;
       "></textarea>
+    <label for="photo-signalement">
+  📸 Ajouter une photo (facultatif)
+</label>
+
+<input
+  type="file"
+  id="photo-signalement"
+  accept="image/*"
+  style="
+    width:100%;
+    margin:10px 0 16px;
+    padding:12px;
+    border:1px solid #A7B69D;
+    border-radius:10px;
+    background:white;
+  "
+>
 
     <button type="button"
       onclick="previsualiserSignalement()"
@@ -1454,8 +1471,36 @@ function ouvrirFormulaireSignalement() {
 function fermerFormulaireSignalement() {
   document.getElementById("formulaire-signalement").style.display = "none";
 }
+function verifierPhotoSignalement() {
+  const champ = document.getElementById("photo-signalement");
+  const photo = champ?.files?.[0];
 
+  if (!photo) return true;
+
+  const formatsAutorises = [
+    "image/jpeg",
+    "image/png",
+    "image/webp"
+  ];
+
+  if (!formatsAutorises.includes(photo.type)) {
+    alert("⚠️ Choisis une photo JPG, PNG ou WebP.");
+    champ.value = "";
+    return false;
+  }
+
+  if (photo.size > 5 * 1024 * 1024) {
+    alert("⚠️ La photo ne doit pas dépasser 5 Mo.");
+    champ.value = "";
+    return false;
+  }
+
+  return true;
+}
 function previsualiserSignalement() {
+  if (!verifierPhotoSignalement()) {
+  return;
+}
   const type = document.getElementById("type-signalement").value;
   const description = document
     .getElementById("description-signalement").value.trim();
@@ -1517,7 +1562,7 @@ const nouveauSignalement = {
   description: description,
   latitude: position.lat,
   longitude: position.lng,
-  date: new Date().toISOString()
+  date: new Date().toISOString(),
   date_observation: new Date(dateObservation).toISOString(),
 };
 
@@ -1532,10 +1577,38 @@ localStorage.setItem(
   JSON.stringify(signalements)
 );
 /* 🌍 Envoyer le signalement à Supabase */
+  function verifierPhotoSignalement() {
+  const champ = document.getElementById("photo-signalement");
+  const photo = champ?.files?.[0];
 
+  if (!photo) return true;
+
+  const formatsAutorises = [
+    "image/jpeg",
+    "image/png",
+    "image/webp"
+  ];
+
+  if (!formatsAutorises.includes(photo.type)) {
+    alert("⚠️ Choisis une photo JPG, PNG ou WebP.");
+    champ.value = "";
+    return false;
+  }
+
+  if (photo.size > 5 * 1024 * 1024) {
+    alert("⚠️ La photo ne doit pas dépasser 5 Mo.");
+    champ.value = "";
+    return false;
+  }
+
+  return true;
+}
+function genererIdentifiantPhoto() {
+  return crypto.randomUUID();
+}
 async function envoyerSignalementSupabase() {
-  const { error } = await supabasePawRando
-    .from("signalements")
+const { error } = await supabasePawRando
+  .from("signalements")
     .insert({
       type: nouveauSignalement.type,
       description: nouveauSignalement.description,
