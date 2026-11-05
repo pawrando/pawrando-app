@@ -1492,6 +1492,16 @@ function previsualiserSignalement() {
 
 const position = marqueurSignalement.getLatLng();
 const dateObservation = document.getElementById("date-observation").value;
+  const dateObservationMs = new Date(dateObservation).getTime();
+
+if (
+  dateObservation &&
+  Number.isFinite(dateObservationMs) &&
+  Date.now() - dateObservationMs > 30 * 24 * 60 * 60 * 1000
+) {
+  alert("⚠️ Une observation de plus de 30 jours ne peut pas être signalée.");
+  return;
+}
   if (dateObservation && new Date(dateObservation).getTime() > Date.now()) {
   alert("⚠️ La date d'observation ne peut pas être dans le futur.");
   return;
@@ -1614,4 +1624,22 @@ function localiserSignalement() {
     }
   );
 }
+</script><script>
+function remplirDateObservation() {
+  const champ = document.getElementById("date-observation");
+  if (!champ) return;
+
+  const maintenant = new Date();
+  const heureLocale = new Date(
+    maintenant.getTime() - maintenant.getTimezoneOffset() * 60000
+  );
+
+  champ.value = heureLocale.toISOString().slice(0, 16);
+}
+
+document.addEventListener("click", function(event) {
+  if (event.target.closest('[onclick*="ouvrirFormulaireSignalement"]')) {
+    remplirDateObservation();
+  }
+});
 </script></body></html>
