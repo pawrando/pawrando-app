@@ -1423,7 +1423,28 @@ localStorage.setItem(
   "pawrando_signalements",
   JSON.stringify(signalements)
 );
+/* 🌍 Envoyer le signalement à Supabase */
 
+async function envoyerSignalementSupabase() {
+  const { error } = await supabasePawRando
+    .from("signalements")
+    .insert({
+      type: nouveauSignalement.type,
+      description: nouveauSignalement.description,
+      latitude: nouveauSignalement.latitude,
+      longitude: nouveauSignalement.longitude
+    });
+
+  if (error) {
+    console.error("Erreur Supabase :", error);
+    alert("⚠️ Envoi impossible. Le signalement reste enregistré sur cet appareil.");
+    return;
+  }
+
+  alert("🐾 Signalement envoyé ! Il sera visible après validation.");
+}
+
+envoyerSignalementSupabase();
 /* 🐾 Actualiser immédiatement la carte */
 afficherSignalementsSauvegardes();
 
