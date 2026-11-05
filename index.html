@@ -1330,7 +1330,7 @@ function previsualiserSignalement() {
     alert("Choisis d'abord un emplacement sur la carte.");
     return;
   }
-
+  
   const noms = {
     chasse: "🔴 Chasse",
     cyanobacteries: "🔵 Cyanobactéries",
@@ -1372,6 +1372,18 @@ localStorage.setItem(
   "pawrando_signalements",
   JSON.stringify(signalements)
 );
-  fermerFormulaireSignalement();
+
+/* 🐾 Actualiser immédiatement la carte */
+afficherSignalementsSauvegardes();
+
+/* Supprimer le marqueur temporaire */
+carteSecurite.removeLayer(marqueurSignalement);
+marqueurSignalement = null;
+
+/* Vider la description pour le prochain signalement */
+document.getElementById("description-signalement").value = "";
+
+/* Fermer le formulaire */
+fermerFormulaireSignalement();
 }
 </script></body></html>
