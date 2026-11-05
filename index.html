@@ -558,13 +558,7 @@ nav button:active {
   </button>
 
 </div>
-  <button
-  type="button"
-  id="effacer-tests-securite"
-  style="background:#FFF3E5;color:#79512F;border:1px solid #E6C9A6;border-radius:12px;padding:12px;width:100%;margin-bottom:12px;font-weight:600;"
->
-  🗑️ Effacer mes signalements locaux
-</button>
+  
 <div id="map-securite"
      aria-label="Carte des signalements de sécurité">
 </div>
@@ -1167,7 +1161,28 @@ afficherSignalementsSauvegardes();
 /* 🌍 Signalements publics PawRando */
 
 const coucheSignalementsPublics = L.layerGroup().addTo(carteSecurite);
+/* 🛡️ Durées de visibilité des alertes PawRando */
 
+const dureesAlertes = {
+  chasse: 12 * 60 * 60 * 1000,
+  cyanobacteries: null,
+  chemin: 7 * 24 * 60 * 60 * 1000,
+  danger: 48 * 60 * 60 * 1000,
+  information: 30 * 24 * 60 * 60 * 1000
+};
+
+function alerteEstActive(signalement) {
+  const duree = dureesAlertes[signalement.type];
+
+  if (duree === null) return true;
+  if (!duree || !signalement.date_creation) return false;
+
+  const date = new Date(signalement.date_creation).getTime();
+
+  return Number.isFinite(date) &&
+    date <= Date.now() &&
+    Date.now() - date < duree;
+}
 async function afficherSignalementsPublics() {
   const { data, error } = await supabasePawRando
     .from("signalements")
@@ -1185,6 +1200,9 @@ async function afficherSignalementsPublics() {
   const categorie = filtre ? filtre.dataset.danger : "tous";
 
   (data || []).forEach(function(signalement) {
+    /* 🛡️ Masquer les alertes expirées */
+if (!alerteEstActive(signalement)) return;
+    
     if (categorie !== "tous" && signalement.type !== categorie) return;
 
     const latitude = Number(signalement.latitude);
@@ -1209,8 +1227,21 @@ async function afficherSignalementsPublics() {
     titre.textContent = nomsSignalements[signalement.type] || "🐾 Signalement";
     description.textContent = signalement.description;
 
-    contenu.append(titre, description);
+const dateSignalement = document.createElement("small");
 
+if (signalement.date_creation) {
+  dateSignalement.textContent =
+    "📅 Signalé le " +
+    new Date(signalement.date_creation).toLocaleString("fr-FR", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit"
+    });
+}
+
+contenu.append(titre, description, dateSignalement);
     marqueur.bindPopup(contenu);
     marqueur.addTo(coucheSignalementsPublics);
   });
@@ -1304,7 +1335,22 @@ afficherSignalementsSauvegardes();
   ">
 
     <h2 style="color:#294B3A;">🚨 Signaler un danger</h2>
-
+<button
+  type="button"
+  onclick="localiserSignalement()"
+  style="
+    background:#356B68;
+    color:white;
+    border:0;
+    padding:13px;
+    border-radius:12px;
+    width:100%;
+    font-weight:bold;
+    margin:12px 0;
+  "
+>
+  📍 Utiliser ma position actuelle
+</button>
     <p>Partage une observation pour aider les autres promeneurs.</p>
 
     <label for="type-signalement">Type de signalement</label>
@@ -1321,7 +1367,26 @@ afficherSignalementsSauvegardes();
       <option value="danger">🟣 Danger pour les chiens</option>
       <option value="information">🟢 Information utile</option>
     </select>
+<!-- 🕒 Date et heure de l'observation -->
 
+<label for="date-observation">
+  🕒 Date et heure de l'observation
+</label>
+
+<input
+  type="datetime-local"
+  id="date-observation"
+  style="
+    width:100%;
+    padding:12px;
+    margin:10px 0 16px;
+    border:1px solid #A7B69D;
+    border-radius:10px;
+    background:white;
+    color:#294B3A;
+    font-size:15px;
+  "
+>
     <label for="description-signalement">Description</label>
 
     <textarea id="description-signalement"
@@ -1490,24 +1555,36 @@ document.querySelectorAll(".filtre-danger").forEach(function(bouton) {
   });
 });
 </script><script>
-document.getElementById("effacer-tests-securite")
-  .addEventListener("click", function() {
+function localiserSignalement() {
+  if (!navigator.geolocation) {
+    alert("La géolocalisation n'est pas disponible.");
+    return;
+  }
 
-    const confirmation = confirm(
-      "Supprimer tous les signalements enregistrés sur cet appareil ? Cette action est irréversible."
-    );
+  navigator.geolocation.getCurrentPosition(
+    function(position) {
+      const latitude = position.coords.latitude;
+      const longitude = position.coords.longitude;
 
-    if (!confirmation) return;
+      if (marqueurSignalement) {
+        carteSecurite.removeLayer(marqueurSignalement);
+      }
 
-    localStorage.removeItem("pawrando_signalements");
+      marqueurSignalement = L.marker([latitude, longitude])
+        .addTo(carteSecurite);
 
-    afficherSignalementsSauvegardes();
+      carteSecurite.setView([latitude, longitude], 15);
 
-    if (marqueurSignalement) {
-      carteSecurite.removeLayer(marqueurSignalement);
-      marqueurSignalement = null;
+      alert("📍 Position récupérée ! Tu peux compléter ton signalement.");
+    },
+    function() {
+      alert("Impossible de récupérer ta position. Vérifie les autorisations GPS.");
+    },
+    {
+      enableHighAccuracy: true,
+      timeout: 15000,
+      maximumAge: 0
     }
-
-    alert("🐾 Les signalements locaux ont été effacés !");
-  });
+  );
+}
 </script></body></html>
