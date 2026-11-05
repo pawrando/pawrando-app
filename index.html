@@ -1177,7 +1177,9 @@ function alerteEstActive(signalement) {
   if (duree === null) return true;
   if (!duree || !signalement.date_creation) return false;
 
-  const date = new Date(signalement.date_creation).getTime();
+ const date = new Date(
+  signalement.date_observation || signalement.date_creation
+).getTime();
 
   return Number.isFinite(date) &&
     date <= Date.now() &&
@@ -1186,7 +1188,7 @@ function alerteEstActive(signalement) {
 async function afficherSignalementsPublics() {
   const { data, error } = await supabasePawRando
     .from("signalements")
-    .select("id,type,description,latitude,longitude,date_creation")
+    .select("id,type,description,latitude,longitude,date_creation,date_observation")
     .eq("statut", "valide");
 
   if (error) {
@@ -1241,7 +1243,21 @@ if (signalement.date_creation) {
     });
 }
 
-contenu.append(titre, description, dateSignalement);
+const dateObservation = document.createElement("small");
+
+if (signalement.date_observation) {
+  dateObservation.textContent =
+    "👀 Observé le " +
+    new Date(signalement.date_observation).toLocaleString("fr-FR", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit"
+    });
+}
+
+contenu.append(titre, description, dateObservation, dateSignalement);
     marqueur.bindPopup(contenu);
     marqueur.addTo(coucheSignalementsPublics);
   });
@@ -1476,6 +1492,10 @@ function previsualiserSignalement() {
 
 const position = marqueurSignalement.getLatLng();
 const dateObservation = document.getElementById("date-observation").value;
+  if (dateObservation && new Date(dateObservation).getTime() > Date.now()) {
+  alert("⚠️ La date d'observation ne peut pas être dans le futur.");
+  return;
+}
 
 if (!dateObservation) {
   alert("⚠️ Indique la date et l'heure de ton observation.");
