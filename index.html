@@ -68,6 +68,100 @@
   border-radius: 16px;
   box-shadow: 0 6px 20px rgba(41,75,58,0.18);
 }
+  /* 🐾 PAWRANDO — FLUIDITÉ APPLICATION */
+
+button,
+.btn,
+a.btn {
+  transition:
+    background-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+button:active,
+.btn:active,
+a.btn:active {
+  transform: scale(0.97);
+}
+
+button:focus-visible,
+.btn:focus-visible,
+a.btn:focus-visible {
+  outline: 3px solid #BF785E;
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  button,
+  .btn,
+  a.btn {
+    transition: none;
+  }
+}
+  /* 🐾 BOUTON PROPOSER UNE RANDONNÉE */
+
+a[href*="proposer"] {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  background: linear-gradient(135deg, #BF785E, #A95F48);
+  color: #FFFFFF !important;
+
+  padding: 16px 24px;
+  border-radius: 16px;
+  font-size: 15px;
+  font-weight: 700;
+  text-decoration: none;
+
+  box-shadow: 0 6px 18px rgba(191,120,94,0.25);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+a[href*="proposer"]:active {
+  transform: scale(0.97);
+  box-shadow: 0 3px 8px rgba(191,120,94,0.18);
+}
+  /* 🐾 BOUTON PREMIUM PAWRANDO */
+
+.bouton-proposer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  box-sizing: border-box;
+
+  background: linear-gradient(135deg, #BF785E, #A95F48);
+  color: white !important;
+
+  padding: 17px 22px;
+  margin: 18px 0;
+  border-radius: 18px;
+
+  font-size: 16px;
+  font-weight: 700;
+  text-decoration: none;
+
+  box-shadow: 0 6px 18px rgba(191,120,94,0.25);
+
+  transition: transform 0.2s ease,
+              box-shadow 0.2s ease;
+}
+
+.bouton-proposer:active {
+  transform: scale(0.97);
+  box-shadow: 0 3px 8px rgba(191,120,94,0.18);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bouton-proposer {
+    transition: none;
+  }
+}
 </style></head><body><header class="entete-pawrando">
   <img
     src="logo-pawrando.png"
@@ -262,7 +356,9 @@
   }
 }
 </style>
-<a href="proposer.html" style="display:block;background:#C76D4D;color:white;text-align:center;padding:14px;margin:12px;border-radius:12px;text-decoration:none;font-weight:bold;">🐾 Proposer une randonnée</a>
+<a href="proposer.html" class="bouton-proposer">
+  🐾 Proposer une randonnée
+</a>
 
 <div id="map" aria-label="Carte interactive"></div><div class="actions">
 <div id="zoneFiltres"></div>
