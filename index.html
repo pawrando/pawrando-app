@@ -974,4 +974,53 @@ if (!map.hasLayer(pointTendon)) {
 document.getElementById("zoneFiltres").appendChild(
   boutonFiltres.onAdd(map)
 );
+</script><script>
+/* 🛡️ CARTE SÉCURITÉ PAWRANDO */
+
+const carteSecurite = L.map("map-securite", {
+  center: [46.6, 2.2],
+  zoom: 6
+});
+
+/* 🛰️ Vue satellite */
+const satelliteSecurite = L.tileLayer(
+  "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+  {
+    maxZoom: 19,
+    attribution: "Imagery © Esri et contributeurs"
+  }
+);
+
+/* 🗺️ Vue classique */
+const classiqueSecurite = L.tileLayer(
+  "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+  {
+    maxZoom: 19,
+    attribution: "© OpenStreetMap contributors"
+  }
+);
+
+/* Satellite affiché par défaut */
+satelliteSecurite.addTo(carteSecurite);
+
+/* Bouton pour changer de carte */
+L.control.layers(
+  {
+    "🛰️ Satellite": satelliteSecurite,
+    "🗺️ Classique": classiqueSecurite
+  },
+  null,
+  {
+    position: "topright",
+    collapsed: false
+  }
+).addTo(carteSecurite);
+
+/* Corrige l'affichage quand on ouvre l'onglet Sécurité */
+document.getElementById("nav-safety")
+  .addEventListener("click", function () {
+    setTimeout(function () {
+      carteSecurite.invalidateSize();
+    }, 300);
+  });
 </script></body></html>
