@@ -162,6 +162,50 @@ a[href*="proposer"]:active {
     transition: none;
   }
 }
+  /* 📱 NAVIGATION MOBILE PAWRANDO */
+
+nav {
+  background: rgba(255, 255, 255, 0.97);
+  border-top: 1px solid #DCE5D8;
+  box-shadow: 0 -5px 20px rgba(41,75,58,0.10);
+  padding: 10px 8px calc(10px + env(safe-area-inset-bottom));
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  gap: 5px;
+}
+
+nav button {
+  flex: 1;
+  min-width: 0;
+  background: transparent;
+  color: #356B68;
+  border: none;
+  border-radius: 14px;
+  padding: 12px 4px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease,
+              color 0.2s ease,
+              transform 0.2s ease;
+}
+
+nav button.active {
+  background: #EDF3E9;
+  color: #294B3A;
+  font-weight: 800;
+}
+
+nav button:active {
+  transform: scale(0.95);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  nav button {
+    transition: none;
+  }
+}
 </style></head><body><header class="entete-pawrando">
   <img
     src="logo-pawrando.png"
